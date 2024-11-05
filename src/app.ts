@@ -1,9 +1,10 @@
-import express, { Request, Response } from "express"
+import express, { Request, Response } from "express";
+import messageRouter from "./message/routes";
+import keepRouter from "./keep/routes";
 
 const app = express();
 
-app.get("", (req: Request, res: Response)=>{
-    res.send("How are your eissa? okok")
-})
+app.use("/message", messageRouter);
+app.use("/keep", keepRouter);
 
 export default app;
