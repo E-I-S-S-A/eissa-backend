@@ -1,11 +1,9 @@
-import express, { Request, Response } from "express"
+import app from "./app";
+import dotenv from "dotenv";
+dotenv.config();
 
-const app = express();
+const port = process.env.PORT || 5000;
 
-app.get("", (req: Request, res: Response)=>{
-    res.send("How are your eissa? okok")
-})
-
-app.listen(5000, ()=>{
-    console.log("server startokoked")
-})
+app.listen(port, () => {
+    console.log(`[server]: Server is running at port: ${port}`);
+});
