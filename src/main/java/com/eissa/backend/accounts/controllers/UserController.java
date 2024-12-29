@@ -1,7 +1,8 @@
 package com.eissa.backend.accounts.controllers;
 
-import com.eissa.backend.accounts.entities.Otp;
-import com.eissa.backend.accounts.entities.User;
+import com.eissa.backend.accounts.classes.entities.Otp;
+import com.eissa.backend.accounts.classes.entities.User;
+import com.eissa.backend.accounts.classes.requests.EmailRequest;
 import com.eissa.backend.accounts.repos.UserRepo;
 import com.eissa.backend.accounts.services.OtpService;
 import common.pojos.Result;
@@ -51,10 +52,10 @@ public class UserController {
     }
 
     @PostMapping("/send-otp")
-    public ResponseEntity<String> sendOtp(@RequestBody String email) {
+    public ResponseEntity<String> sendOtp(@RequestBody EmailRequest emailRequest) {
         try {
             String otpString = otpService.generateOtp();
-            Otp otp = new Otp(email, otpString);
+            Otp otp = new Otp(emailRequest.getEmail(), otpString);
             int rows = otpService.sendOtp(otp);
             if (rows == 1) {
                 return ResponseEntity.status(HttpStatus.CREATED).build();

@@ -1,8 +1,7 @@
 package com.eissa.backend.accounts.repos;
 
-import com.eissa.backend.accounts.entities.Otp;
+import com.eissa.backend.accounts.classes.entities.Otp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

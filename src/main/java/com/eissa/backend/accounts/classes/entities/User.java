@@ -1,6 +1,4 @@
-package com.eissa.backend.accounts.entities;
-
-import org.springframework.stereotype.Component;
+package com.eissa.backend.accounts.classes.entities;
 
 public class User {
     String userId;

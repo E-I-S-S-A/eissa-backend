@@ -1,4 +1,4 @@
-package com.eissa.backend.accounts.entities;
+package com.eissa.backend.accounts.classes.entities;
 
 import java.time.LocalDateTime;
 
