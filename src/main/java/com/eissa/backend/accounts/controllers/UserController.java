@@ -1,6 +1,9 @@
 package com.eissa.backend.accounts.controllers;
+
+import com.eissa.backend.accounts.entities.Otp;
 import com.eissa.backend.accounts.entities.User;
 import com.eissa.backend.accounts.repos.UserRepo;
+import com.eissa.backend.accounts.services.OtpService;
 import common.pojos.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -12,60 +15,81 @@ public class UserController {
 
     @Autowired
     UserRepo userRepo;
+    @Autowired
+    OtpService otpService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user){
+    public ResponseEntity<String> signup(@RequestBody User user) {
         try {
             boolean isExists = userRepo.isEmailExists(user.getEmail());
-            if(isExists){
+            if (isExists) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
             }
             int rows = userRepo.insertUser(user);
-            return ResponseEntity.ok("Success");
+            if (rows == 1) {
+                return ResponseEntity.status(HttpStatus.CREATED).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/email-exists")
-    public ResponseEntity<String> isEmailExists(@RequestParam String email){
-        try{
+    public ResponseEntity<String> isEmailExists(@RequestParam String email) {
+        try {
             boolean isExists = userRepo.isEmailExists(email);
-            if(isExists){
+            if (isExists) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            }
-            else{
+            } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-//    @PostMapping("/send-otp")
-//    public ResponseEntity<String> sendOtp(@RequestBody String email){
-//        try{
-//
-//        }
-//        catch(Exception e){
-//
-//        }
-//    }
+    @PostMapping("/send-otp")
+    public ResponseEntity<String> sendOtp(@RequestBody String email) {
+        try {
+            String otpString = otpService.generateOtp();
+            Otp otp = new Otp(email, otpString);
+            int rows = otpService.sendOtp(otp);
+            if (rows == 1) {
+                return ResponseEntity.status(HttpStatus.CREATED).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestBody Otp otp) {
+        try {
+            HttpStatus status = otpService.veriFyOtp(otp);
+            return ResponseEntity.status(status).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @PostMapping("/signin")
-    public Result signin(@RequestBody String requestBody){
-        return new Result(0, "Signin "+requestBody);
+    public Result signin(@RequestBody String requestBody) {
+        return new Result(0, "Signin " + requestBody);
     }
 
     @PutMapping("/forgot-password")
-    public Result forgotPassword(@RequestBody String requestBody){
-        return new Result(0, "Forgot "+requestBody);
+    public Result forgotPassword(@RequestBody String requestBody) {
+        return new Result(0, "Forgot " + requestBody);
     }
 
 
     @GetMapping("/eissa")
-    public String eissa(){
+    public String eissa() {
         return "This is eissa, App is working fine. and this is new";
     }
 }
