@@ -27,6 +27,22 @@ public class UserController {
         }
     }
 
+    @GetMapping("/email-exists")
+    public ResponseEntity<String> isEmailExists(@RequestParam String email){
+        try{
+            boolean isExists = userRepo.isEmailExists(email);
+            if(isExists){
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 //    @PostMapping("/send-otp")
 //    public ResponseEntity<String> sendOtp(@RequestBody String email){
 //        try{
