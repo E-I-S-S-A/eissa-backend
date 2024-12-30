@@ -14,6 +14,6 @@ CREATE TABLE IF NOT EXISTS otp
     otp_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email  VARCHAR(255) NOT NULL,
     otp    VARCHAR(6)   NOT NULL,
-    expiry DATE         NOT NULL
+    expiry DATETIME         NOT NULL
 );
 

@@ -44,7 +44,16 @@ public class OtpService {
 
     public HttpStatus veriFyOtp(Otp otp) {
         Otp otpFromDb = otpRepo.getOtp(otp);
-        return HttpStatus.OK;
+        if(otpFromDb == null) {
+            return HttpStatus.UNAUTHORIZED;
+        }
+
+        if(otpFromDb.getExpiry().isAfter(LocalDateTime.now())) {
+            return HttpStatus.OK;
+        }
+        else{
+            return HttpStatus.GONE;
+        }
     }
 
     public boolean sendEmail(String to, String subject, String body) {

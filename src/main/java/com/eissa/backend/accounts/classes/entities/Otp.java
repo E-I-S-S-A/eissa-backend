@@ -8,6 +8,9 @@ public class Otp {
     String otp;
     LocalDateTime expiry;
 
+    public Otp() {
+    }
+
     public Otp(String email, String otp) {
         this.email = email;
         this.otp = otp;
