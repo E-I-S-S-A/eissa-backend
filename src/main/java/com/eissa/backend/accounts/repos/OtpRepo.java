@@ -5,9 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-
 @Repository
 public class OtpRepo {
 
@@ -36,8 +33,8 @@ public class OtpRepo {
         }
     }
 
-    public int deleteOtp(String email) {
-        String query = "delete * from otp where email=?";
+    public int deleteAllOtpsByEmail(String email) {
+        String query = "delete from otp where email=?";
         return jdbcTemplate.update(query, email);
     }
 }

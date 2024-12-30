@@ -42,18 +42,9 @@ public class OtpService {
         return rows;
     }
 
-    public HttpStatus veriFyOtp(Otp otp) {
+    public Otp veriFyOtp(Otp otp) {
         Otp otpFromDb = otpRepo.getOtp(otp);
-        if(otpFromDb == null) {
-            return HttpStatus.UNAUTHORIZED;
-        }
-
-        if(otpFromDb.getExpiry().isAfter(LocalDateTime.now())) {
-            return HttpStatus.OK;
-        }
-        else{
-            return HttpStatus.GONE;
-        }
+        return otpFromDb;
     }
 
     public boolean sendEmail(String to, String subject, String body) {
