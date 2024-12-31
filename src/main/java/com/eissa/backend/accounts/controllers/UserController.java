@@ -8,6 +8,7 @@ import com.eissa.backend.accounts.repos.UserRepo;
 import com.eissa.backend.accounts.services.OtpService;
 import common.pojos.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/accounts")
+@CrossOrigin(origins  = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -47,9 +49,9 @@ public class UserController {
         try {
             boolean isExists = userRepo.isEmailExists(email);
             if (isExists) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                return ResponseEntity.status(HttpStatus.OK).body("Email exists");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
