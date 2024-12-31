@@ -8,7 +8,6 @@ import com.eissa.backend.accounts.repos.UserRepo;
 import com.eissa.backend.accounts.services.OtpService;
 import common.pojos.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody User user) {
         try {
-            boolean isExists = userRepo.isEmailExists(user.getEmail());
+            boolean isExists = userRepo.checkIfEmailExists(user.getEmail());
             if (isExists) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
             }
@@ -45,9 +44,9 @@ public class UserController {
     }
 
     @GetMapping("/email-exists")
-    public ResponseEntity<String> isEmailExists(@RequestParam String email) {
+    public ResponseEntity<String> checkIfEmailExists(@RequestParam String email) {
         try {
-            boolean isExists = userRepo.isEmailExists(email);
+            boolean isExists = userRepo.checkIfEmailExists(email);
             if (isExists) {
                 return ResponseEntity.status(HttpStatus.OK).body("Email exists");
             } else {
@@ -59,9 +58,9 @@ public class UserController {
     }
 
     @GetMapping("/userId-exists")
-    public ResponseEntity<String> isUserIdExists(@RequestParam String userId) {
+    public ResponseEntity<String> checkIfUserIdExists(@RequestParam String userId) {
         try {
-            boolean isExists = userRepo.isUserIdExists(userId);
+            boolean isExists = userRepo.checkIfUserIdExists(userId);
             if (isExists) {
                 return ResponseEntity.status(HttpStatus.OK).body("userId exists");
             } else {

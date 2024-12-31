@@ -24,13 +24,13 @@ public class UserRepo {
             return jdbcTemplate.update(query, user.getUserId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
     }
 
-    public boolean isEmailExists(String email){
+    public boolean checkIfEmailExists(String email){
         String query = "select count(*) from users where email = ?";
         Integer count =  jdbcTemplate.queryForObject(query, new Object[]{email}, Integer.class);
         return count != null && count > 0;
     }
 
-    public boolean isUserIdExists(String userId){
+    public boolean checkIfUserIdExists(String userId){
         String query = "select count(*) from users where userId = ?";
         Integer count =  jdbcTemplate.queryForObject(query, new Object[]{userId}, Integer.class);
         return count != null && count > 0;
