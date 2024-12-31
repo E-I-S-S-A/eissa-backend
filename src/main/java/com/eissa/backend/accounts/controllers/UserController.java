@@ -112,8 +112,18 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public Result signin(@RequestBody String requestBody) {
-        return new Result(0, "Signin " + requestBody);
+    public ResponseEntity<User> signin(@RequestBody User user) {
+        try {
+            boolean passwordMatches = userRepo.checkIfEmailPasswordCorrect(user);
+
+            if (passwordMatches) {
+                return ResponseEntity.status(HttpStatus.OK).body(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(user);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/forgot-password")

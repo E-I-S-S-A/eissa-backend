@@ -2,6 +2,7 @@ package com.eissa.backend.accounts.repos;
 
 import com.eissa.backend.accounts.classes.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +35,11 @@ public class UserRepo {
         String query = "select count(*) from users where userId = ?";
         Integer count =  jdbcTemplate.queryForObject(query, new Object[]{userId}, Integer.class);
         return count != null && count > 0;
+    }
+
+    public boolean checkIfEmailPasswordCorrect(User user) {
+        String query = "select * from users where email = ? and password = ?";
+        User userFromDB = jdbcTemplate.queryForObject(query, new Object[]{user.getEmail(), user.getPassword()},new BeanPropertyRowMapper<>(User.class));
+        return userFromDB.getPassword().equals(user.getPassword());
     }
 }
