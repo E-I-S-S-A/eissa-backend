@@ -35,7 +35,7 @@ public class UserController {
             }
             int rows = userRepo.insertUser(user);
             if (rows == 1) {
-                return ResponseEntity.status(HttpStatus.CREATED).build();
+                return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
@@ -52,6 +52,20 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.OK).body("Email exists");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/userId-exists")
+    public ResponseEntity<String> isUserIdExists(@RequestParam String userId) {
+        try {
+            boolean isExists = userRepo.isUserIdExists(userId);
+            if (isExists) {
+                return ResponseEntity.status(HttpStatus.OK).body("userId exists");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("userId not found");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

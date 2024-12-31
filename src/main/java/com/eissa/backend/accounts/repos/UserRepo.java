@@ -29,4 +29,10 @@ public class UserRepo {
         Integer count =  jdbcTemplate.queryForObject(query, new Object[]{email}, Integer.class);
         return count != null && count > 0;
     }
+
+    public boolean isUserIdExists(String userId){
+        String query = "select count(*) from users where userId = ?";
+        Integer count =  jdbcTemplate.queryForObject(query, new Object[]{userId}, Integer.class);
+        return count != null && count > 0;
+    }
 }

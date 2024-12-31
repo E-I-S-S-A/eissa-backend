@@ -34,8 +34,10 @@ public class OtpService {
 
     public int sendOtp(Otp otp) {
 
-        this.sendEmail(otp.getEmail(), subject, body+otp.getOtp());
-
+        boolean isEmailSent = this.sendEmail(otp.getEmail(), subject, body+otp.getOtp());
+        if(!isEmailSent){
+            return 0;
+        }
         LocalDateTime localDateTime10 = LocalDateTime.now().plusMinutes(EXPIERY_MINUTES);
         otp.setExpiry(localDateTime10);
         int rows = otpRepo.insertOtp(otp);
