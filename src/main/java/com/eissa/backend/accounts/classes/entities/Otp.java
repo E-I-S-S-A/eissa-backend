@@ -1,7 +1,10 @@
 package com.eissa.backend.accounts.classes.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Otp {
     Long otpId;
     String email;

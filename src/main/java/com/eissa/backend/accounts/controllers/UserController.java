@@ -3,10 +3,11 @@ package com.eissa.backend.accounts.controllers;
 import com.eissa.backend.accounts.classes.entities.Otp;
 import com.eissa.backend.accounts.classes.entities.User;
 import com.eissa.backend.accounts.classes.requests.EmailRequest;
+import com.eissa.backend.accounts.classes.responses.AccessTokenResponse;
 import com.eissa.backend.accounts.repos.OtpRepo;
 import com.eissa.backend.accounts.repos.UserRepo;
 import com.eissa.backend.accounts.services.OtpService;
-import common.pojos.Result;
+import com.eissa.backend.common.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/accounts")
-@CrossOrigin(origins  = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -112,14 +113,17 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<User> signin(@RequestBody User user) {
+    public ResponseEntity<AccessTokenResponse> signin(@RequestBody User user) {
         try {
-            boolean passwordMatches = userRepo.checkIfEmailPasswordCorrect(user);
+            User userFromDb = userRepo.getUserFromEmailPassword(user);
 
-            if (passwordMatches) {
-                return ResponseEntity.status(HttpStatus.OK).body(user);
+            if (userFromDb != null) {
+                AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+                String accessToken = JwtUtil.generateToken(userFromDb.toString());
+                accessTokenResponse.setAccessToken(accessToken);
+                return ResponseEntity.status(HttpStatus.OK).body(accessTokenResponse);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(user);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -127,8 +131,8 @@ public class UserController {
     }
 
     @PutMapping("/forgot-password")
-    public Result forgotPassword(@RequestBody String requestBody) {
-        return new Result(0, "Forgot " + requestBody);
+    public String forgotPassword(@RequestBody String requestBody) {
+        return "hello";
     }
 
 
