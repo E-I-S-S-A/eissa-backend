@@ -7,7 +7,10 @@ import com.eissa.backend.accounts.classes.responses.AccessTokenResponse;
 import com.eissa.backend.accounts.repos.OtpRepo;
 import com.eissa.backend.accounts.repos.UserRepo;
 import com.eissa.backend.accounts.services.OtpService;
+import com.eissa.backend.common.utils.CookieEnum;
+import com.eissa.backend.common.utils.CookieUtil;
 import com.eissa.backend.common.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,6 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/accounts")
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -113,17 +115,16 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AccessTokenResponse> signin(@RequestBody User user) {
+    public ResponseEntity<String> signin(HttpServletResponse response, @RequestBody User user) {
         try {
             User userFromDb = userRepo.getUserFromEmailPassword(user);
 
             if (userFromDb != null) {
-                AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
                 String accessToken = JwtUtil.generateToken(userFromDb.toString());
-                accessTokenResponse.setAccessToken(accessToken);
-                return ResponseEntity.status(HttpStatus.OK).body(accessTokenResponse);
+                CookieUtil.setCookie(response, CookieEnum.ACCESS_TOKEN, accessToken);
+                return ResponseEntity.status(HttpStatus.OK).body("Success");
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
