@@ -1,13 +1,12 @@
 package com.eissa.backend.accounts.controllers;
 
-import com.eissa.backend.accounts.classes.entities.Otp;
-import com.eissa.backend.accounts.classes.entities.User;
-import com.eissa.backend.accounts.classes.requests.EmailRequest;
-import com.eissa.backend.accounts.classes.responses.AccessTokenResponse;
+import com.eissa.backend.accounts.models.classes.entities.Otp;
+import com.eissa.backend.accounts.models.classes.entities.User;
+import com.eissa.backend.accounts.models.classes.requests.EmailRequest;
 import com.eissa.backend.accounts.repos.OtpRepo;
 import com.eissa.backend.accounts.repos.UserRepo;
 import com.eissa.backend.accounts.services.OtpService;
-import com.eissa.backend.common.utils.CookieEnum;
+import com.eissa.backend.accounts.models.enums.CookieEnum;
 import com.eissa.backend.common.utils.CookieUtil;
 import com.eissa.backend.common.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;

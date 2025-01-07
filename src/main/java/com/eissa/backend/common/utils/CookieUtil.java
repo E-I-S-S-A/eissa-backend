@@ -1,5 +1,6 @@
 package com.eissa.backend.common.utils;
 
+import com.eissa.backend.accounts.models.enums.CookieEnum;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

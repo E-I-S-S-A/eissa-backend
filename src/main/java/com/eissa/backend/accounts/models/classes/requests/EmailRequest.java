@@ -1,4 +1,4 @@
-package com.eissa.backend.accounts.classes.requests;
+package com.eissa.backend.accounts.models.classes.requests;
 
 public class EmailRequest {
     String email;

@@ -1,4 +1,4 @@
-package com.eissa.backend.accounts.classes.responses;
+package com.eissa.backend.accounts.models.classes.responses;
 
 public class AccessTokenResponse {
     String accessToken;

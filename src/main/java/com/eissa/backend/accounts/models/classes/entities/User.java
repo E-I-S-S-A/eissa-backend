@@ -1,4 +1,4 @@
-package com.eissa.backend.accounts.classes.entities;
+package com.eissa.backend.accounts.models.classes.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

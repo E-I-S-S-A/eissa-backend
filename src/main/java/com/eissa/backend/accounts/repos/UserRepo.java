@@ -1,6 +1,6 @@
 package com.eissa.backend.accounts.repos;
 
-import com.eissa.backend.accounts.classes.entities.User;
+import com.eissa.backend.accounts.models.classes.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
