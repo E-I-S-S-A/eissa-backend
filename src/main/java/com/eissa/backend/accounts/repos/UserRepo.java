@@ -51,4 +51,17 @@ public class UserRepo {
         }
     }
 
+    public User getUserFromEmailOrId(String key) {
+        try {
+            String query = "select userId, firstName, lastName, email  from users where email = ? or userId = ?";
+            return jdbcTemplate.queryForObject(
+                    query,
+                    new Object[]{key, key},
+                    new BeanPropertyRowMapper<>(User.class)
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
 }

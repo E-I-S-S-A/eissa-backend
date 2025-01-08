@@ -9,6 +9,7 @@ import com.eissa.backend.accounts.services.OtpService;
 import com.eissa.backend.accounts.models.enums.CookieEnum;
 import com.eissa.backend.common.utils.CookieUtil;
 import com.eissa.backend.common.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -119,12 +120,29 @@ public class UserController {
             User userFromDb = userRepo.getUserFromEmailPassword(user);
 
             if (userFromDb != null) {
-                String accessToken = JwtUtil.generateToken(userFromDb.toString());
+                String accessToken = JwtUtil.generateToken(userFromDb.getEmail());
                 CookieUtil.setCookie(response, CookieEnum.ACCESS_TOKEN, accessToken);
                 return ResponseEntity.status(HttpStatus.OK).body("Success");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/get-user")
+    public ResponseEntity<User> getUser(HttpServletRequest request) {
+        try {
+            String accessToken = CookieUtil.getCookie(request, CookieEnum.ACCESS_TOKEN);
+            String userEmail = JwtUtil.validateToken(accessToken);
+            User userFromDb = userRepo.getUserFromEmailOrId(userEmail);
+            return ResponseEntity.status(HttpStatus.OK).body(userFromDb);
+
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.GONE).build();
+        } catch (io.jsonwebtoken.SignatureException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

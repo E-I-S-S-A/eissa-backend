@@ -18,11 +18,11 @@ public class CookieUtil {
         response.addCookie(cookie);
     }
 
-    public static String getCookie(HttpServletRequest request, String name) {
+    public static String getCookie(HttpServletRequest request, CookieEnum name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(name)) {
+                if (cookie.getName().equals(String.valueOf(name))) {
                     return cookie.getValue();
                 }
             }
