@@ -135,6 +135,10 @@ public class UserController {
     public ResponseEntity<User> getUser(HttpServletRequest request) {
         try {
             String accessToken = CookieUtil.getCookie(request, CookieEnum.ACCESS_TOKEN);
+
+            if (accessToken == null && accessToken.isEmpty())
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Access token not found");
+
             String userEmail = JwtUtil.validateToken(accessToken);
             User userFromDb = userRepo.getUserFromEmailOrId(userEmail);
             return ResponseEntity.status(HttpStatus.OK).body(userFromDb);

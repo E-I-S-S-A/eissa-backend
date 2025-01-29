@@ -17,3 +17,11 @@ CREATE TABLE IF NOT EXISTS otp
     expiry DATETIME         NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS keep
+(
+    keepId VARCHAR(255)  PRIMARY KEY,
+    title  TEXT,
+    description TEXT,
+    backgroundColor VARCHAR(255)
+);
+
