@@ -12,7 +12,7 @@ public class KeepRepo {
     JdbcTemplate jdbcTemplate;
 
     public int addKeep(Keep keep){
-        String query = "insert into keep(keepId, title, description,backgroundColor) values(?,?,?,?)";
-        return jdbcTemplate.update(query, keep.getKeepId(),  keep.getTitle(), keep.getDescription(),keep.getBackgroundColor());
+        String query = "insert into keep(keepId, userId, title, description, backgroundColor) values(?,?,?,?,?)";
+        return jdbcTemplate.update(query, keep.getKeepId(), keep.getUserId() ,keep.getTitle(), keep.getDescription(),keep.getBackgroundColor());
     }
 }
