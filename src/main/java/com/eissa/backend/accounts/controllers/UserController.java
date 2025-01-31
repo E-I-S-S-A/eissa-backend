@@ -120,7 +120,7 @@ public class UserController {
             User userFromDb = userRepo.getUserFromEmailPassword(user);
 
             if (userFromDb != null) {
-                String accessToken = JwtUtil.generateToken(userFromDb.getEmail());
+                String accessToken = JwtUtil.generateToken(userFromDb.getUserId());
                 CookieUtil.setCookie(response, CookieEnum.ACCESS_TOKEN, accessToken);
                 return ResponseEntity.status(HttpStatus.OK).body("Success");
             } else {
@@ -139,8 +139,8 @@ public class UserController {
             if (accessToken == null && accessToken.isEmpty())
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Access token not found");
 
-            String userEmail = JwtUtil.validateToken(accessToken);
-            User userFromDb = userRepo.getUserFromEmailOrId(userEmail);
+            String userId = JwtUtil.validateToken(accessToken);
+            User userFromDb = userRepo.getUserFromEmailOrId(userId);
             return ResponseEntity.status(HttpStatus.OK).body(userFromDb);
 
         } catch (io.jsonwebtoken.ExpiredJwtException e) {

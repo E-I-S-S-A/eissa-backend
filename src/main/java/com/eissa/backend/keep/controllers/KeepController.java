@@ -3,6 +3,7 @@ package com.eissa.backend.keep.controllers;
 import com.eissa.backend.accounts.models.classes.entities.User;
 import com.eissa.backend.accounts.models.enums.CookieEnum;
 import com.eissa.backend.accounts.repos.UserRepo;
+import com.eissa.backend.accounts.services.UserService;
 import com.eissa.backend.common.utils.CookieUtil;
 import com.eissa.backend.common.utils.JwtUtil;
 import com.eissa.backend.keep.models.classes.entities.Keep;
@@ -23,7 +24,7 @@ public class KeepController {
     @Autowired
     KeepRepo keepRepo;
     @Autowired
-    UserRepo userRepo;
+    UserService userService;
 
     @PostMapping("/add")
     public ResponseEntity<String> addKeep(HttpServletRequest httpServletRequest, @RequestBody Keep keep) {
@@ -36,9 +37,8 @@ public class KeepController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
-            String userEmail = JwtUtil.validateToken(accessToken);
-            User userFromDb = userRepo.getUserFromEmailOrId(userEmail);
-            keep.setUserId(userFromDb.getUserId());
+            String userId = userService.getUserIdFromAccessToken(accessToken);
+            keep.setUserId(userId);
 
             int count = this.keepRepo.addKeep(keep);
             return count > 0 ? ResponseEntity.ok("Success") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -54,9 +54,8 @@ public class KeepController {
             if (accessToken.isEmpty() || accessToken == null)
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-            String userEmail = JwtUtil.validateToken(accessToken);
-            User userFromDb = userRepo.getUserFromEmailOrId(userEmail);
-            List<Keep> keeps = this.keepRepo.getKeeps(page, limit, searchToken, userFromDb.getUserId());
+            String userId = userService.getUserIdFromAccessToken(accessToken);
+            List<Keep> keeps = this.keepRepo.getKeeps(page, limit, searchToken, userId);
 
             return ResponseEntity.ok(keeps);
         } catch (Exception e) {
@@ -71,9 +70,8 @@ public class KeepController {
             if (accessToken.isEmpty() || accessToken == null)
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-            String userEmail = JwtUtil.validateToken(accessToken);
-            User userFromDb = userRepo.getUserFromEmailOrId(userEmail);
-            keep.setUserId(userFromDb.getUserId());
+            String userId = userService.getUserIdFromAccessToken(accessToken);
+            keep.setUserId(userId);
 
             int count = keepRepo.updateKeep(keep);
             return count > 0 ? ResponseEntity.ok("Updated successfully") : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Keep not found");
@@ -89,10 +87,9 @@ public class KeepController {
             if (accessToken.isEmpty() || accessToken == null)
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-            String userEmail = JwtUtil.validateToken(accessToken);
-            User userFromDb = userRepo.getUserFromEmailOrId(userEmail);
+            String userId = userService.getUserIdFromAccessToken(accessToken);
 
-            int count = keepRepo.deleteKeep(keepId, userFromDb.getUserId());
+            int count = keepRepo.deleteKeep(keepId, userId);
             return count > 0 ? ResponseEntity.ok("Deleted successfully") : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Keep not found");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
