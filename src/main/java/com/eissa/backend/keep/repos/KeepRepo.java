@@ -26,4 +26,15 @@ public class KeepRepo {
 
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Keep.class), userId, limit, offset);
     }
+
+    public int updateKeep(Keep keep) {
+        String query = "UPDATE keep SET title = ?, description = ?, backgroundColor = ? WHERE keepId = ? AND userId = ?";
+        return jdbcTemplate.update(query, keep.getTitle(), keep.getDescription(), keep.getBackgroundColor(), keep.getKeepId(), keep.getUserId());
+    }
+
+    public int deleteKeep(String keepId, String userId) {
+        String query = "DELETE FROM keep WHERE keepId = ? AND userId = ?";
+        return jdbcTemplate.update(query, keepId, userId);
+    }
+
 }
