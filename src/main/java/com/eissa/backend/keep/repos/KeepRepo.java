@@ -20,12 +20,23 @@ public class KeepRepo {
     }
 
     public List<Keep> getKeeps(int page, int limit, String searchToken, String userId) {
-        String query = "SELECT keepId, title, description, backgroundColor, createdOn " + "FROM keep WHERE userId = ? ORDER BY createdOn DESC LIMIT ? OFFSET ?";
+        String query = "SELECT keepId, title, description, backgroundColor, createdOn FROM keep WHERE userId = ? ";
+
+        if (searchToken != null && !searchToken.isEmpty()) {
+            query += "AND (title LIKE ? OR description LIKE ?) ";
+        }
+
+        query += "ORDER BY createdOn DESC LIMIT ? OFFSET ?";
 
         int offset = (page - 1) * limit;
 
-        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Keep.class), userId, limit, offset);
+        if (searchToken != null && !searchToken.isEmpty()) {
+            return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Keep.class), userId, "%" + searchToken + "%", "%" + searchToken + "%", limit, offset);
+        } else {
+            return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Keep.class), userId, limit, offset);
+        }
     }
+
 
     public int updateKeep(Keep keep) {
         String query = "UPDATE keep SET title = ?, description = ?, backgroundColor = ? WHERE keepId = ? AND userId = ?";
