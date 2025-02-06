@@ -29,7 +29,7 @@ public class UserController {
     private OtpRepo otpRepo;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user) {
+    public ResponseEntity<String> signup(HttpServletResponse response, @RequestBody User user) {
         try {
             boolean isExists = userRepo.checkIfEmailExists(user.getEmail());
             if (isExists) {
@@ -37,6 +37,8 @@ public class UserController {
             }
             int rows = userRepo.insertUser(user);
             if (rows == 1) {
+                String accessToken = JwtUtil.generateToken(user.getUserId());
+                CookieUtil.setCookie(response, CookieEnum.ACCESS_TOKEN, accessToken);
                 return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

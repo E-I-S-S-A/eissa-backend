@@ -29,9 +29,9 @@ public class JwtUtil {
         }
     }
 
-    public static String generateToken(String userEmail) {
+    public static String generateToken(String userId) {
         return Jwts.builder()
-                .setSubject(userEmail)
+                .setSubject(userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIERY))
                 .signWith(SECRET_KEY)
@@ -43,7 +43,7 @@ public class JwtUtil {
         Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
-                .parseClaimsJws(token);  // throws exception if invalid or expired
+                .parseClaimsJws(token);
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
