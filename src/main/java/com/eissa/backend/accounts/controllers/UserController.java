@@ -138,8 +138,9 @@ public class UserController {
         try {
             String accessToken = CookieUtil.getCookie(request, CookieEnum.ACCESS_TOKEN);
 
-            if (accessToken == null && accessToken.isEmpty())
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Access token not found");
+            if (accessToken == null || accessToken.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
 
             String userId = JwtUtil.validateToken(accessToken);
             User userFromDb = userRepo.getUserFromEmailOrId(userId);
@@ -160,8 +161,8 @@ public class UserController {
     }
 
 
-    @GetMapping("/eissa")
+    @GetMapping("/health")
     public String eissa() {
-        return "This is eissa, App is working fine. and this is new";
+        return "The server is healthy and is running as on 14 Feb";
     }
 }
